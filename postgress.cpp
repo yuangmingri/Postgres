@@ -156,7 +156,7 @@ PGconn* postgress_connect()
     
 
 	PGresult *res = NULL;
-	sprintf(sSql, "CREATE TABLE public.fas_check_result (ID serial PRIMARY KEY, callid VARCHAR (255) NOT NULL, calltime VARCHAR (255) NOT NULL, result smallint);");
+	sprintf(sSql, "CREATE TABLE IF NOT EXISTS public.fas_check_result (ID serial PRIMARY KEY, callid VARCHAR (255) NOT NULL, calltime VARCHAR (255) NOT NULL, result smallint);");
 	res = PQexec(conn, sSql);
 
 	if (PQresultStatus(res) != PGRES_COMMAND_OK)
