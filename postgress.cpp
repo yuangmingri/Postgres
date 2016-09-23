@@ -56,11 +56,11 @@ int CreateTable(PGconn *conn, char* table_name)
 	return 0;
 }
 
-int InsertRecord(PGconn *conn, const char* table_name, const char* calltime, int result, const char *callid)
+int InsertRecord(PGconn *conn, const char* table_name, const char* calltime, const char *callid,int result)
 {
 	// Append the SQL statement
 	char sSql[256];
-	sprintf(sSql, "INSERT INTO %s VALUES('%s', '%d', '%s')", table_name, calltime, result, callid);
+	sprintf(sSql, "INSERT INTO %s VALUES('%s', '%s', '%d')", table_name, calltime, callid, result);
 
 	// Execute with SQL statement
 	PGresult *res = PQexec(conn, sSql);
@@ -156,7 +156,7 @@ PGconn* postgress_connect()
     
 
 	PGresult *res = NULL;
-	sprintf(sSql, "CREATE TABLE IF NOT EXISTS public.fas_check_result (calltime varchar(60), result smallint, callid varchar(60))");
+	sprintf(sSql, "CREATE TABLE public.fas_check_result (ID serial PRIMARY KEY, callid VARCHAR (255) NOT NULL, calltime VARCHAR (255) NOT NULL, result smallint);");
 	res = PQexec(conn, sSql);
 
 	if (PQresultStatus(res) != PGRES_COMMAND_OK)
@@ -177,11 +177,10 @@ void postgress_test()
 {
 	PGconn *conn = NULL;
 	conn = postgress_connect();
-	CreateTable(conn, "VadTable");
 	
-	InsertRecord(conn, "public.fas_check_result", "2016-08-31", 1, "0000");
-	InsertRecord(conn, "public.fas_check_result", "2016-09-01", 0, "1111");
-	InsertRecord(conn, "public.fas_check_result", "2016-09-02", 1, "2222");
+	InsertRecord(conn, "public.fas_check_result", "2016-08-31", "0000", 1 );
+	InsertRecord(conn, "public.fas_check_result", "2016-09-01", "1111", 0 );
+	InsertRecord(conn, "public.fas_check_result", "2016-09-02", "2222", 1);
 
 	GetAllRecords(conn, "public.fas_check_result");
 	DisconnectDababase(conn);
