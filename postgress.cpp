@@ -60,7 +60,7 @@ int InsertRecord(PGconn *conn, const char* table_name, const char* calltime, con
 {
 	// Append the SQL statement
 	char sSql[256];
-	sprintf(sSql, "INSERT INTO %s VALUES('%s', '%s', '%d')", table_name, calltime, callid, result);
+	sprintf(sSql, "INSERT INTO %s(callid,calltime,result) VALUES('%s', '%s', '%d')", table_name, calltime, callid, result);
 
 	// Execute with SQL statement
 	PGresult *res = PQexec(conn, sSql);
